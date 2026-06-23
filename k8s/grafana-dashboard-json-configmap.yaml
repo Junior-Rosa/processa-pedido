@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-json
+  namespace: processador-pedidos
+data:
+  pedidos.json: |
+    {
+      "title": "Processador de Pedidos",
+      "uid": "pedidos-overview",
+      "schemaVersion": 39,
+      "refresh": "5s",
+      "time": { "from": "now-15m", "to": "now" },
+      "panels": [
+        {
+          "id": 1,
+          "title": "Pedidos recebidos vs processados (taxa/s)",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+          "targets": [
+            { "expr": "rate(pedidos_recebidos_total[1m])", "legendFormat": "recebidos" },
+            { "expr": "rate(pedidos_processados_total[1m])", "legendFormat": "processados" }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Falhas de processamento (taxa/s)",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+          "targets": [
+            { "expr": "rate(pedidos_processamento_falhas_total[1m])", "legendFormat": "falhas" }
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Latência de processamento p95 (s)",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+          "targets": [
+            { "expr": "histogram_quantile(0.95, rate(pedidos_tempo_processamento_seconds_bucket[5m]))", "legendFormat": "p95" }
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Cache hit ratio (painel)",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+          "targets": [
+            { "expr": "rate(cache_hits_total[1m]) / (rate(cache_hits_total[1m]) + rate(cache_misses_total[1m]))", "legendFormat": "hit ratio" }
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Latência HTTP loja/painel p95 (s)",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
+          "targets": [
+            { "expr": "histogram_quantile(0.95, sum(rate(django_http_requests_latency_seconds_by_view_method_bucket[5m])) by (le, job))", "legendFormat": "{{job}}" }
+          ]
+        }
+      ]
+    }

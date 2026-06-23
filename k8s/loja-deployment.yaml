@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loja
+  namespace: processador-pedidos
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: loja
+  template:
+    metadata:
+      labels:
+        app: loja
+    spec:
+      containers:
+      - name: loja
+        image: pedidos-app:v1
+        imagePullPolicy: Never
+        command: ["sh", "-c"]
+        args:
+          - |
+            until python manage.py migrate --noinput; do
+              echo "Aguardando DB..."; sleep 3
+            done
+            gunicorn config.wsgi:application --bind 0.0.0.0:5000 --workers 2
+        envFrom:
+        - secretRef:
+            name: db-secret
+        env:
+        - name: RABBIT_HOST
+          value: rabbitmq
+        - name: DB_HOST
+          value: db
+        - name: REDIS_HOST
+          value: redis
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10

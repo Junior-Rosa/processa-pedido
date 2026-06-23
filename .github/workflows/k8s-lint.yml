@@ -1,0 +1,25 @@
+name: Kubernetes — lint de manifests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "k8s/**"
+  pull_request:
+    paths:
+      - "k8s/**"
+
+jobs:
+  kubeconform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar kubeconform
+        run: |
+          curl -sSL https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz \
+            | tar -xz kubeconform
+          sudo mv kubeconform /usr/local/bin/
+
+      - name: Validar manifests contra schema do Kubernetes
+        run: kubeconform -strict -summary k8s/*.yaml

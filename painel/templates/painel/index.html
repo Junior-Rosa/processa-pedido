@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="4">
+  <title>Painel de Pedidos</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: sans-serif; padding: 2rem; background: #fafafa; color: #1a1a1a; }
+    h1 { font-size: 1.4rem; margin-bottom: 1rem; }
+    table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    th, td { padding: 10px 14px; border-bottom: 1px solid #eee; text-align: left; font-size: 13px; }
+    th { background: #f5f5f5; font-weight: 600; }
+    tr:last-child td { border-bottom: none; }
+    .status-processado { color: #1a7a4a; font-weight: 500; }
+    .status-pendente { color: #a06000; font-weight: 500; }
+    .status-cancelado { color: #c0392b; font-weight: 500; }
+    .empty { text-align: center; color: #888; padding: 2rem; }
+  </style>
+</head>
+<body>
+  <h1>Painel de Pedidos</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Hora</th>
+        <th>Itens</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in pedidos %}
+      <tr>
+        <td>{{ pedido.id }}</td>
+        <td>{{ pedido.cliente }}</td>
+        <td>R$ {{ pedido.total }}</td>
+        <td class="status-{{ pedido.status }}">{{ pedido.status }}</td>
+        <td>{{ pedido.criado_em|time:"H:i:s" }}</td>
+        <td>{{ pedido.itens.count }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="empty">Nenhum pedido ainda.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

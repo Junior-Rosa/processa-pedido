@@ -1,0 +1,47 @@
+name: App — integração docker-compose
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Subir stack completa
+        run: docker compose -f docker-compose.yml up --build -d
+
+      - name: Esperar serviços ficarem saudáveis
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:5000/health > /dev/null; then
+              echo "loja ok"; break
+            fi
+            echo "Aguardando loja... ($i)"; sleep 3
+          done
+          curl -sf http://localhost:5000/health
+
+      - name: Criar pedido válido (loja -> rabbitmq -> worker -> db)
+        run: |
+          curl -sf -X POST http://localhost:5000/order \
+            -H "Content-Type: application/json" \
+            -d '{"cliente":"CI","itens":[{"produto":"Notebook","qty":1,"preco":3500.00}]}' \
+            | tee response.json
+          grep -q '"status":"queued"' response.json
+
+      - name: Esperar worker processar e validar painel
+        run: |
+          sleep 5
+          curl -sf http://localhost:3000/orders | tee orders.json
+          grep -q '"cliente": "CI"' orders.json
+
+      - name: Logs em caso de falha
+        if: failure()
+        run: docker compose -f docker-compose.yml logs
+
+      - name: Encerrar stack
+        if: always()
+        run: docker compose -f docker-compose.yml down -v

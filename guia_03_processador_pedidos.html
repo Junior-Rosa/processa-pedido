@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Processador de Pedidos — Guia Interativo ADS</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --color-background-primary: #ffffff; --color-background-secondary: #f5f5f5;
+  --color-text-primary: #1a1a1a; --color-text-secondary: #555555; --color-text-tertiary: #888888;
+  --color-border-secondary: #d4d4d4; --color-border-tertiary: #e4e4e4;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --border-radius-md: 8px; --border-radius-lg: 12px;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --color-background-primary: #1a1a1a; --color-background-secondary: #242424; --color-text-primary: #e8e8e8; --color-text-secondary: #aaaaaa; --color-text-tertiary: #666666; --color-border-secondary: #3a3a3a; --color-border-tertiary: #2e2e2e; }
+  .yb-deploy{background:#1a3a5c!important;color:#6eaadf!important} .yb-svc{background:#1a3a1a!important;color:#6aad4a!important} .yb-secret{background:#3a2a0a!important;color:#d99a40!important} .yb-pvc{background:#3a1a10!important;color:#d07060!important} .yb-compose{background:#2a2a4a!important;color:#9090d8!important} .qt-conceitual{background:#1a3a5c!important;color:#6eaadf!important} .qt-pratica{background:#0f3328!important;color:#4aad8a!important}
+  .mb-0{background:#1a3a5c!important;color:#6eaadf!important} .mb-1{background:#2a2a4a!important;color:#9090d8!important} .mb-2{background:#1a3a1a!important;color:#6aad4a!important} .mb-3{background:#3a1a10!important;color:#d07060!important}
+}
+body { font-family: var(--font-sans); background: var(--color-background-primary); color: var(--color-text-primary); padding: 2rem 1.5rem 4rem; min-height: 100vh; }
+.guide { max-width: 860px; margin: 0 auto; padding: 1rem 0 2rem; }
+h1.guide-title { font-size: 22px; font-weight: 600; color: var(--color-text-primary); margin-bottom: 6px; }
+.guide-subtitle { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.8rem; line-height: 1.6; }
+.mod-nav { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.mod-btn { font-family: var(--font-sans); font-size: 12px; font-weight: 500; padding: 7px 14px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-secondary); cursor: pointer; transition: all 0.15s; }
+.mod-btn:hover { background: var(--color-background-secondary); }
+.mod-btn.active { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
+.steps-nav { display: flex; gap: 0; margin-bottom: 1.5rem; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+.step-btn { flex: 1; padding: 9px 4px; font-size: 11px; font-family: var(--font-sans); font-weight: 500; background: var(--color-background-primary); color: var(--color-text-tertiary); border: none; border-right: 0.5px solid var(--color-border-tertiary); cursor: pointer; transition: all 0.15s; }
+.step-btn:last-child { border-right: none; }
+.step-btn.active { background: var(--color-background-secondary); color: var(--color-text-primary); }
+.step-btn.done { color: #1D9E75; }
+.step-btn .snum { display: block; font-size: 15px; font-weight: 500; margin-bottom: 2px; }
+.mod-panel { display: none; } .mod-panel.active { display: block; }
+.step-panel { display: none; } .step-panel.active { display: block; }
+.panel-title { font-family: var(--font-sans); font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 4px; }
+.panel-sub { font-family: var(--font-sans); font-size: 13px; color: var(--color-text-secondary); margin: 0 0 1.4rem; line-height: 1.6; }
+.slabel { font-family: var(--font-sans); font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.07em; margin: 1.4rem 0 7px; }
+.concept { background: var(--color-background-secondary); border-left: 3px solid #7F77DD; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 11px 15px; margin-bottom: 1.2rem; font-family: var(--font-sans); font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+.concept strong { color: var(--color-text-primary); font-weight: 500; }
+.concept.green { border-left-color: #1D9E75; } .concept.amber { border-left-color: #BA7517; } .concept.coral { border-left-color: #D85A30; }
+.cmd-block { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); margin-bottom: 10px; overflow: hidden; }
+.cmd-header { display: flex; align-items: center; justify-content: space-between; padding: 5px 12px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.cmd-label { font-family: var(--font-sans); font-size: 11px; color: var(--color-text-tertiary); }
+.copy-btn { font-family: var(--font-sans); font-size: 11px; color: var(--color-text-secondary); background: none; border: 0.5px solid var(--color-border-tertiary); border-radius: 4px; padding: 2px 8px; cursor: pointer; transition: all 0.15s; }
+.copy-btn:hover { background: var(--color-border-tertiary); }
+.cmd-body { padding: 10px 14px; font-size: 12px; line-height: 1.75; color: var(--color-text-primary); white-space: pre; overflow-x: auto; font-family: var(--font-mono, monospace); }
+.cmd-body .c { color: var(--color-text-tertiary); } .cmd-body .hl { color: #1D9E75; } .cmd-body .warn { color: #BA7517; }
+.yaml-block { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); margin-bottom: 12px; overflow: hidden; }
+.yaml-header { display: flex; align-items: center; gap: 6px; justify-content: space-between; padding: 5px 12px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.yaml-filename { font-size: 12px; font-weight: 500; color: var(--color-text-primary); font-family: var(--font-mono, monospace); }
+.yaml-badges { display: flex; gap: 4px; align-items: center; }
+.yb { font-family: var(--font-sans); font-size: 10px; padding: 2px 7px; border-radius: 10px; }
+.yb-deploy { background: #E6F1FB; color: #185FA5; } .yb-svc { background: #EAF3DE; color: #3B6D11; }
+.yb-secret { background: #FAEEDA; color: #854F0B; } .yb-pvc { background: #FAECE7; color: #993C1D; } .yb-compose { background: #EEEDFE; color: #534AB7; }
+.yaml-body { padding: 10px 14px; font-size: 12px; line-height: 1.75; color: var(--color-text-primary); white-space: pre; overflow-x: auto; font-family: var(--font-mono, monospace); }
+.yaml-body .k { color: #7F77DD; } .yaml-body .v { color: #1D9E75; } .yaml-body .c { color: var(--color-text-tertiary); } .yaml-body .s { color: #D85A30; }
+.verify { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px 16px; margin-top: 1rem; font-family: var(--font-sans); }
+.verify-title { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 8px; }
+.verify ul { margin: 0; padding-left: 1.1rem; font-size: 13px; color: var(--color-text-secondary); line-height: 1.8; }
+.verify ul li::marker { color: #1D9E75; }
+.nav-row { display: flex; justify-content: space-between; margin-top: 1.8rem; }
+.nav-btn { font-family: var(--font-sans); font-size: 13px; padding: 8px 18px; border-radius: var(--border-radius-md); cursor: pointer; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); transition: all 0.15s; }
+.nav-btn.primary { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
+.nav-btn:disabled { opacity: 0.3; cursor: default; } .nav-btn:not(:disabled):hover { opacity: 0.85; }
+.mod-badge { display: inline-block; font-family: var(--font-sans); font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+.mb-0 { background: #E6F1FB; color: #185FA5; } .mb-1 { background: #EEEDFE; color: #534AB7; } .mb-2 { background: #EAF3DE; color: #3B6D11; } .mb-3 { background: #FAECE7; color: #993C1D; }
+.q-list { list-style: none; padding: 0; margin: 0; }
+.q-item { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 16px 18px; margin-bottom: 12px; font-family: var(--font-sans); }
+.q-num { font-size: 11px; font-weight: 600; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.q-text { font-size: 14px; font-weight: 500; color: var(--color-text-primary); line-height: 1.5; margin-bottom: 8px; }
+.q-hint { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+.q-type { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; }
+.qt-conceitual { background: #E6F1FB; color: #185FA5; } .qt-pratica { background: #E1F5EE; color: #0F6E56; }
+.ascii-diagram { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 14px 18px; font-family: var(--font-mono, monospace); font-size: 12px; line-height: 1.8; color: var(--color-text-secondary); overflow-x: auto; white-space: pre; margin-bottom: 1.2rem; }
+.ascii-diagram .hi { color: #7F77DD; font-weight: 600; } .ascii-diagram .hg { color: #1D9E75; font-weight: 600; } .ascii-diagram .ho { color: #D85A30; font-weight: 600; }
+.file-tree { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 14px 18px; font-family: var(--font-mono, monospace); font-size: 12.5px; line-height: 1.9; color: var(--color-text-secondary); overflow-x: auto; white-space: pre; margin-bottom: 1.2rem; }
+.file-tree .dir { color: #7F77DD; font-weight: 600; } .file-tree .file { color: var(--color-text-primary); } .file-tree .note { color: var(--color-text-tertiary); font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="guide">
+
+  <h1 class="guide-title">Processador de Pedidos — Multi-serviço</h1>
+  <p class="guide-subtitle">Roteiro prático para turmas de ADS · Docker Compose → Kubernetes (k3d) · Flask + RabbitMQ + Worker Python + Postgres + Painel Flask</p>
+
+  <div class="mod-nav">
+    <button class="mod-btn active" onclick="goMod(0)">00 · Visão geral</button>
+    <button class="mod-btn" onclick="goMod(1)">01 · Docker Compose</button>
+    <button class="mod-btn" onclick="goMod(2)">02 · Kubernetes / k3d</button>
+    <button class="mod-btn" onclick="goMod(3)">03 · Questões</button>
+  </div>
+
+  <!-- MÓDULO 0 -->
+  <div id="mod0" class="mod-panel active">
+    <div id="nav-m0" class="steps-nav">
+      <button class="step-btn active" onclick="goStep(0,0)"><span class="snum">1</span>Arquitetura</button>
+      <button class="step-btn" onclick="goStep(0,1)"><span class="snum">2</span>Arquivos</button>
+    </div>
+
+    <div class="step-panel active">
+      <span class="mod-badge mb-0">Módulo 0 — Visão geral</span>
+      <h2 class="panel-title">Arquitetura da aplicação</h2>
+      <p class="panel-sub">Sistema de processamento de pedidos usando RabbitMQ como broker real com ACK/NACK — diferente do Redis List, o RabbitMQ garante entrega mesmo que o worker caia no meio do processamento.</p>
+
+      <div class="slabel">Os 5 serviços</div>
+      <div class="concept">
+        <strong>1. loja (Flask · porta 5000)</strong> — Recebe <code>POST /order</code> com itens do carrinho. Publica mensagem na exchange RabbitMQ <code>pedidos</code>. Retorna <code>order_id</code> imediatamente sem esperar o processamento.
+      </div>
+      <div class="concept green">
+        <strong>2. rabbitmq (RabbitMQ 3-management · porta 15672)</strong> — Broker de mensagens com exchange <code>pedidos</code> e fila <code>pedidos.queue</code>. Interface web de gerenciamento em :15672.
+      </div>
+      <div class="concept amber">
+        <strong>3. db (Postgres 15)</strong> — Tabelas <code>pedidos</code> (id, cliente, total, status, criado_em) e <code>itens_pedido</code> (pedido_id, produto, qty, preco).
+      </div>
+      <div class="concept coral">
+        <strong>4. worker (Python · pika)</strong> — Consome <code>pedidos.queue</code> com ACK manual. Valida estoque (simulado), faz INSERT no Postgres, depois ACK. Se crashar antes do ACK, RabbitMQ reentrega automaticamente.
+      </div>
+      <div class="concept">
+        <strong>5. painel (Flask · porta 3000)</strong> — Lista pedidos com status e detalhes. Lê diretamente do Postgres.
+      </div>
+
+      <div class="slabel">Fluxo completo com ACK</div>
+      <div class="ascii-diagram"><span class="hi">SIMULAÇÃO DE COMPRA</span>
+──────────────────────────────────────────────────────
+[Cliente]  ──POST /order {cliente, itens[]}──▶  [<span class="hi">loja Flask</span>]
+                                                     │
+                                    gera order_id = uuid
+                                                     │
+                                  publish exchange "pedidos"
+                                       [<span class="hg">RabbitMQ</span>]
+                                                     │
+                              ◀── {order_id, status: "queued"}
+
+<span class="hi">PROCESSAMENTO COM ACK MANUAL</span>
+──────────────────────────────────────────────────────
+[<span class="hg">RabbitMQ</span>]  ──deliver──▶  [<span class="ho">worker Python/pika</span>]
+                                     │
+                         valida estoque (simulado)
+                                     │
+                    ┌────────────────┴────────────────┐
+                 válido                           inválido
+                    │                                 │
+          INSERT pedidos (status=OK)          NACK → requeue=False
+               [<span class="ho">Postgres</span>]                    (mensagem descartada)
+                    │
+                  ACK()  ← só após INSERT bem-sucedido
+                    │
+             [<span class="hg">RabbitMQ</span>] remove da fila
+
+<span class="hi">PAINEL</span>
+──────────────────────────────────────────────────────
+[Usuário]  ──GET /──▶  [<span class="hi">painel Flask :3000</span>]
+                                │
+                 SELECT pedidos + itens_pedido
+                           [<span class="ho">Postgres</span>]</div>
+
+      <div class="slabel">Redis List vs RabbitMQ</div>
+      <div class="concept amber">
+        <strong>Redis List:</strong> simples, rápido, sem ACK nativo — se o worker crashar após BLPOP, a mensagem se perde.<br>
+        <strong>RabbitMQ:</strong> ACK/NACK explícito — mensagem fica "unacked" até ACK. Se worker cair, RabbitMQ reentrega. Exchange → binding → queue permite roteamento flexível. Ideal para pedidos onde perda é inaceitável.
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" disabled>← anterior</button>
+        <button class="nav-btn primary" onclick="goStep(0,1)">próximo →</button>
+      </div>
+    </div>
+
+    <div class="step-panel">
+      <span class="mod-badge mb-0">Módulo 0 — Visão geral</span>
+      <h2 class="panel-title">Estrutura de arquivos</h2>
+
+      <div class="file-tree"><span class="dir">processador-pedidos/</span>
+├── <span class="dir">loja/</span>                              <span class="note">← Flask entrada de pedidos</span>
+│   ├── <span class="file">app.py</span>
+│   ├── <span class="file">requirements.txt</span>
+│   └── <span class="file">Dockerfile</span>
+├── <span class="dir">worker/</span>                            <span class="note">← consumer pika + ACK</span>
+│   ├── <span class="file">worker.py</span>
+│   ├── <span class="file">requirements.txt</span>
+│   └── <span class="file">Dockerfile</span>
+├── <span class="dir">painel/</span>                            <span class="note">← Flask painel de pedidos</span>
+│   ├── <span class="file">app.py</span>
+│   ├── <span class="file">requirements.txt</span>
+│   └── <span class="file">Dockerfile</span>
+└── <span class="file">docker-compose.yml</span></div>
+
+      <div class="concept amber">
+        <strong>loja:</strong> flask, pika, psycopg2-binary<br>
+        <strong>worker:</strong> pika, psycopg2-binary<br>
+        <strong>painel:</strong> flask, psycopg2-binary<br>
+        <strong>Imagens base:</strong> python:3.11-slim, rabbitmq:3-management, postgres:15-alpine
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="goStep(0,0)">← anterior</button>
+        <button class="nav-btn primary" onclick="goMod(1)">ir para Compose →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MÓDULO 1 -->
+  <div id="mod1" class="mod-panel">
+    <div id="nav-m1" class="steps-nav">
+      <button class="step-btn active" onclick="goStep(1,0)"><span class="snum">1</span>Código</button>
+      <button class="step-btn" onclick="goStep(1,1)"><span class="snum">2</span>Dockerfiles</button>
+      <button class="step-btn" onclick="goStep(1,2)"><span class="snum">3</span>Compose</button>
+      <button class="step-btn" onclick="goStep(1,3)"><span class="snum">4</span>Testar</button>
+      <button class="step-btn" onclick="goStep(1,4)"><span class="snum">5</span>Checklist</button>
+    </div>
+
+    <div class="step-panel active">
+      <span class="mod-badge mb-1">Módulo 1 — Docker Compose</span>
+      <h2 class="panel-title">Código-fonte dos serviços</h2>
+
+      <div class="slabel">loja/app.py — Flask publica no RabbitMQ</div>
+      <div class="yaml-block">
+        <div class="yaml-header">
+          <span class="yaml-filename">loja/app.py</span>
+          <div class="yaml-badges"><span class="yb yb-deploy">Python · Flask · pika</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        </div>
+        <div class="cmd-body">import os, time, json, uuid
+import pika, psycopg2
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+RABBIT_HOST = os.environ.get('RABBIT_HOST', 'rabbitmq')
+RABBIT_USER = os.environ.get('RABBIT_USER', 'guest')
+RABBIT_PASS = os.environ.get('RABBIT_PASS', 'guest')
+
+def get_db():
+    return psycopg2.connect(
+        host=os.environ.get('DB_HOST','db'),
+        dbname=os.environ.get('POSTGRES_DB','pedidosdb'),
+        user=os.environ.get('POSTGRES_USER','postgres'),
+        password=os.environ.get('POSTGRES_PASSWORD','postgres')
+    )
+
+def get_rabbit():
+    creds = pika.PlainCredentials(RABBIT_USER, RABBIT_PASS)
+    conn = pika.BlockingConnection(pika.ConnectionParameters(
+        host=RABBIT_HOST, credentials=creds, heartbeat=60))
+    ch = conn.channel()
+    ch.exchange_declare(exchange='pedidos', exchange_type='direct', durable=True)
+    ch.queue_declare(queue='pedidos.queue', durable=True)
+    ch.queue_bind(queue='pedidos.queue', exchange='pedidos', routing_key='pedido')
+    return conn, ch
+
+def init_db():
+    conn = get_db(); cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS pedidos (
+            id VARCHAR(36) PRIMARY KEY,
+            cliente VARCHAR(100) NOT NULL,
+            total NUMERIC(10,2) DEFAULT 0,
+            status VARCHAR(20) DEFAULT 'pendente',
+            criado_em TIMESTAMP DEFAULT NOW()
+        );
+        CREATE TABLE IF NOT EXISTS itens_pedido (
+            id SERIAL PRIMARY KEY,
+            pedido_id VARCHAR(36) REFERENCES pedidos(id),
+            produto VARCHAR(100) NOT NULL,
+            qty INT NOT NULL,
+            preco NUMERIC(10,2) NOT NULL
+        );
+    """)
+    conn.commit(); cur.close(); conn.close()
+
+@app.route('/order', methods=['POST'])
+def create_order():
+    data = request.get_json() or {}
+    cliente = data.get('cliente','anonimo')
+    itens = data.get('itens', [])
+    if not itens:
+        return jsonify({'error':'itens obrigatorio'}), 400
+    order_id = str(uuid.uuid4())[:8]
+    payload = json.dumps({'order_id': order_id, 'cliente': cliente, 'itens': itens})
+    try:
+        conn, ch = get_rabbit()
+        ch.basic_publish(
+            exchange='pedidos',
+            routing_key='pedido',
+            body=payload,
+            properties=pika.BasicProperties(delivery_mode=2)  <span class="c"># persistent</span>
+        )
+        conn.close()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    return jsonify({'order_id': order_id, 'status': 'queued'})
+
+@app.route('/health')
+def health(): return 'ok'
+
+if __name__ == '__main__':
+    time.sleep(6)
+    init_db()
+    app.run(host='0.0.0.0', port=5000)</div>
+      </div>
+
+      <div class="slabel">worker/worker.py — Consome com ACK manual</div>
+      <div class="yaml-block">
+        <div class="yaml-header">
+          <span class="yaml-filename">worker/worker.py</span>
+          <div class="yaml-badges"><span class="yb yb-deploy">Python · pika ACK</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        </div>
+        <div class="cmd-body">import os, time, json
+import pika, psycopg2
+
+RABBIT_HOST = os.environ.get('RABBIT_HOST','rabbitmq')
+RABBIT_USER = os.environ.get('RABBIT_USER','guest')
+RABBIT_PASS = os.environ.get('RABBIT_PASS','guest')
+
+def get_db():
+    return psycopg2.connect(
+        host=os.environ.get('DB_HOST','db'),
+        dbname=os.environ.get('POSTGRES_DB','pedidosdb'),
+        user=os.environ.get('POSTGRES_USER','postgres'),
+        password=os.environ.get('POSTGRES_PASSWORD','postgres')
+    )
+
+def processar(ch, method, properties, body):
+    try:
+        data = json.loads(body)
+        order_id = data['order_id']
+        cliente  = data['cliente']
+        itens    = data['itens']
+
+        <span class="c"># Validação simulada de estoque</span>
+        for item in itens:
+            if item.get('qty', 0) &lt;= 0:
+                print(f"NACK: qty inválida em {order_id}")
+                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+                return
+
+        total = sum(i.get('preco',0) * i.get('qty',1) for i in itens)
+
+        conn = get_db(); cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO pedidos (id, cliente, total, status) VALUES (%s,%s,%s,'processado')",
+            (order_id, cliente, total)
+        )
+        for item in itens:
+            cur.execute(
+                "INSERT INTO itens_pedido (pedido_id,produto,qty,preco) VALUES (%s,%s,%s,%s)",
+                (order_id, item['produto'], item['qty'], item['preco'])
+            )
+        conn.commit(); cur.close(); conn.close()
+
+        <span class="c"># ACK somente após INSERT bem-sucedido</span>
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+        print(f"ACK: pedido {order_id} processado. Total: R${total:.2f}")
+    except Exception as e:
+        print(f"Erro: {e}")
+        ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+
+def run():
+    creds = pika.PlainCredentials(RABBIT_USER, RABBIT_PASS)
+    conn = pika.BlockingConnection(pika.ConnectionParameters(
+        host=RABBIT_HOST, credentials=creds, heartbeat=60))
+    ch = conn.channel()
+    ch.exchange_declare(exchange='pedidos', exchange_type='direct', durable=True)
+    ch.queue_declare(queue='pedidos.queue', durable=True)
+    ch.queue_bind(queue='pedidos.queue', exchange='pedidos', routing_key='pedido')
+    ch.basic_qos(prefetch_count=1)  <span class="c"># processa um por vez — fair dispatch</span>
+    ch.basic_consume(queue='pedidos.queue', on_message_callback=processar)
+    print('Worker aguardando pedidos...')
+    ch.start_consuming()
+
+while True:
+    try:
+        run()
+    except Exception as e:
+        print(f'Reconectando: {e}')
+        time.sleep(5)</div>
+      </div>
+
+      <div class="slabel">painel/app.py — Painel de pedidos Flask</div>
+      <div class="yaml-block">
+        <div class="yaml-header">
+          <span class="yaml-filename">painel/app.py</span>
+          <div class="yaml-badges"><span class="yb yb-deploy">Python · Flask</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        </div>
+        <div class="cmd-body">import os, time
+import psycopg2
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+def get_db():
+    return psycopg2.connect(
+        host=os.environ.get('DB_HOST','db'),
+        dbname=os.environ.get('POSTGRES_DB','pedidosdb'),
+        user=os.environ.get('POSTGRES_USER','postgres'),
+        password=os.environ.get('POSTGRES_PASSWORD','postgres')
+    )
+
+@app.route('/')
+def index():
+    conn = get_db(); cur = conn.cursor()
+    cur.execute("""
+        SELECT p.id, p.cliente, p.total, p.status, p.criado_em,
+               COUNT(i.id) as num_itens
+        FROM pedidos p
+        LEFT JOIN itens_pedido i ON i.pedido_id = p.id
+        GROUP BY p.id ORDER BY p.criado_em DESC LIMIT 50
+    """)
+    rows = cur.fetchall(); cur.close(); conn.close()
+    linhas = ''.join(
+        f'&lt;tr&gt;&lt;td&gt;{r[0]}&lt;/td&gt;&lt;td&gt;{r[1]}&lt;/td&gt;&lt;td&gt;R${r[2]:.2f}&lt;/td&gt;&lt;td&gt;{r[3]}&lt;/td&gt;&lt;td&gt;{r[4].strftime("%H:%M:%S")}&lt;/td&gt;&lt;td&gt;{r[5]}&lt;/td&gt;&lt;/tr&gt;'
+        for r in rows
+    )
+    return f"""&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="refresh" content="4"&gt;
+    &lt;title&gt;Painel de Pedidos&lt;/title&gt;
+    &lt;style&gt;body{{font-family:sans-serif;padding:2rem}}table{{border-collapse:collapse;width:100%}}
+    th,td{{padding:8px 12px;border:1px solid #ddd}}th{{background:#f0f0f0}}&lt;/style&gt;&lt;/head&gt;
+    &lt;body&gt;&lt;h1&gt;Painel de Pedidos&lt;/h1&gt;
+    &lt;table&gt;&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;Cliente&lt;/th&gt;&lt;th&gt;Total&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;th&gt;Hora&lt;/th&gt;&lt;th&gt;Itens&lt;/th&gt;&lt;/tr&gt;
+    {linhas}&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;"""
+
+@app.route('/orders')
+def orders_json():
+    conn = get_db(); cur = conn.cursor()
+    cur.execute("SELECT id, cliente, total, status FROM pedidos ORDER BY criado_em DESC LIMIT 20")
+    rows = cur.fetchall(); cur.close(); conn.close()
+    return jsonify([{'id':r[0],'cliente':r[1],'total':float(r[2]),'status':r[3]} for r in rows])
+
+if __name__ == '__main__':
+    time.sleep(5)
+    app.run(host='0.0.0.0', port=3000)</div>
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="goMod(0)">← anterior</button>
+        <button class="nav-btn primary" onclick="goStep(1,1)">próximo →</button>
+      </div>
+    </div>
+
+    <!-- Step 1-1: Dockerfiles -->
+    <div class="step-panel">
+      <span class="mod-badge mb-1">Módulo 1 — Docker Compose</span>
+      <h2 class="panel-title">Dockerfiles</h2>
+
+      <div class="slabel">loja/Dockerfile e worker/Dockerfile (idênticos)</div>
+      <div class="yaml-block">
+        <div class="yaml-header">
+          <span class="yaml-filename">loja/Dockerfile</span>
+          <div class="yaml-badges"><span class="yb yb-deploy">Python 3.11-slim</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        </div>
+        <div class="cmd-body">FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY app.py .
+EXPOSE 5000
+CMD ["python", "app.py"]</div>
+      </div>
+
+      <div class="slabel">requirements.txt dos serviços Python</div>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-label">loja/requirements.txt e painel/requirements.txt</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        <div class="cmd-body">flask==3.0.3
+pika==1.3.2
+psycopg2-binary==2.9.9</div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-label">worker/requirements.txt</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        <div class="cmd-body">pika==1.3.2
+psycopg2-binary==2.9.9</div>
+      </div>
+
+      <div class="concept amber">
+        <strong>pika</strong> é a biblioteca Python oficial para comunicar com RabbitMQ via protocolo AMQP 0-9-1. Usar <code>delivery_mode=2</code> torna as mensagens persistentes — sobrevivem a restart do RabbitMQ.
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="goStep(1,0)">← anterior</button>
+        <button class="nav-btn primary" onclick="goStep(1,2)">próximo →</button>
+      </div>
+    </div>
+
+    <!-- Step 1-2: Compose -->
+    <div class="step-panel">
+      <span class="mod-badge mb-1">Módulo 1 — Docker Compose</span>
+      <h2 class="panel-title">docker-compose.yml anotado</h2>
+
+      <div class="yaml-block">
+        <div class="yaml-header">
+          <span class="yaml-filename">docker-compose.yml</span>
+          <div class="yaml-badges"><span class="yb yb-compose">Compose v3.8</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        </div>
+        <div class="yaml-body"><span class="k">version:</span> <span class="v">"3.8"</span>
+
+<span class="k">services:</span>
+
+  <span class="k">db:</span>
+    <span class="k">image:</span> <span class="v">postgres:15-alpine</span>
+    <span class="k">environment:</span>
+      <span class="k">POSTGRES_DB:</span> <span class="v">pedidosdb</span>
+      <span class="k">POSTGRES_USER:</span> <span class="v">postgres</span>
+      <span class="k">POSTGRES_PASSWORD:</span> <span class="v">postgres</span>
+    <span class="k">volumes:</span>
+      <span class="s">- db_data:/var/lib/postgresql/data</span>
+    <span class="k">healthcheck:</span>
+      <span class="k">test:</span> <span class="v">["CMD-SHELL","pg_isready -U postgres"]</span>
+      <span class="k">interval:</span> <span class="v">5s</span>
+      <span class="k">retries:</span> <span class="v">5</span>
+
+  <span class="k">rabbitmq:</span>
+    <span class="k">image:</span> <span class="v">rabbitmq:3-management</span>  <span class="c"># inclui painel web :15672</span>
+    <span class="k">ports:</span>
+      <span class="s">- "15672:15672"</span>             <span class="c"># painel RabbitMQ (user: guest/guest)</span>
+    <span class="k">healthcheck:</span>
+      <span class="k">test:</span> <span class="v">["CMD","rabbitmq-diagnostics","ping"]</span>
+      <span class="k">interval:</span> <span class="v">10s</span>
+      <span class="k">retries:</span> <span class="v">10</span>
+
+  <span class="k">loja:</span>
+    <span class="k">build:</span> <span class="v">./loja</span>
+    <span class="k">ports:</span>
+      <span class="s">- "5000:5000"</span>
+    <span class="k">environment:</span>
+      <span class="k">RABBIT_HOST:</span> <span class="v">rabbitmq</span>
+      <span class="k">RABBIT_USER:</span> <span class="v">guest</span>
+      <span class="k">RABBIT_PASS:</span> <span class="v">guest</span>
+      <span class="k">DB_HOST:</span> <span class="v">db</span>
+      <span class="k">POSTGRES_DB:</span> <span class="v">pedidosdb</span>
+      <span class="k">POSTGRES_USER:</span> <span class="v">postgres</span>
+      <span class="k">POSTGRES_PASSWORD:</span> <span class="v">postgres</span>
+    <span class="k">depends_on:</span>
+      <span class="k">db:</span>
+        <span class="k">condition:</span> <span class="v">service_healthy</span>
+      <span class="k">rabbitmq:</span>
+        <span class="k">condition:</span> <span class="v">service_healthy</span>
+
+  <span class="k">worker:</span>
+    <span class="k">build:</span> <span class="v">./worker</span>
+    <span class="k">environment:</span>
+      <span class="k">RABBIT_HOST:</span> <span class="v">rabbitmq</span>
+      <span class="k">RABBIT_USER:</span> <span class="v">guest</span>
+      <span class="k">RABBIT_PASS:</span> <span class="v">guest</span>
+      <span class="k">DB_HOST:</span> <span class="v">db</span>
+      <span class="k">POSTGRES_DB:</span> <span class="v">pedidosdb</span>
+      <span class="k">POSTGRES_USER:</span> <span class="v">postgres</span>
+      <span class="k">POSTGRES_PASSWORD:</span> <span class="v">postgres</span>
+    <span class="k">depends_on:</span>
+      <span class="k">db:</span>
+        <span class="k">condition:</span> <span class="v">service_healthy</span>
+      <span class="k">rabbitmq:</span>
+        <span class="k">condition:</span> <span class="v">service_healthy</span>
+
+  <span class="k">painel:</span>
+    <span class="k">build:</span> <span class="v">./painel</span>
+    <span class="k">ports:</span>
+      <span class="s">- "3000:3000"</span>
+    <span class="k">environment:</span>
+      <span class="k">DB_HOST:</span> <span class="v">db</span>
+      <span class="k">POSTGRES_DB:</span> <span class="v">pedidosdb</span>
+      <span class="k">POSTGRES_USER:</span> <span class="v">postgres</span>
+      <span class="k">POSTGRES_PASSWORD:</span> <span class="v">postgres</span>
+    <span class="k">depends_on:</span>
+      <span class="k">db:</span>
+        <span class="k">condition:</span> <span class="v">service_healthy</span>
+
+<span class="k">volumes:</span>
+  <span class="k">db_data:</span></div>
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="goStep(1,1)">← anterior</button>
+        <button class="nav-btn primary" onclick="goStep(1,3)">próximo →</button>
+      </div>
+    </div>
+
+    <!-- Step 1-3: Testar -->
+    <div class="step-panel">
+      <span class="mod-badge mb-1">Módulo 1 — Docker Compose</span>
+      <h2 class="panel-title">Subir e testar</h2>
+
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-label">subir</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        <div class="cmd-body">cd processador-pedidos
+docker compose up --build -d
+docker compose ps   <span class="c"># aguarde rabbitmq ficar healthy (~30s)</span></div>
+      </div>
+
+      <div class="slabel">Simular compras</div>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-label">curl — criar pedido</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        <div class="cmd-body">curl -s -X POST http://localhost:5000/order \
+  -H "Content-Type: application/json" \
+  -d '{"cliente":"Maria","itens":[
+    {"produto":"Notebook","qty":1,"preco":3500.00},
+    {"produto":"Mouse","qty":2,"preco":89.90}
+  ]}'
+
+curl -s -X POST http://localhost:5000/order \
+  -H "Content-Type: application/json" \
+  -d '{"cliente":"João","itens":[{"produto":"Teclado","qty":1,"preco":250.00}]}'</div>
+      </div>
+
+      <div class="concept green">
+        <strong>Painel RabbitMQ:</strong> <strong>http://localhost:15672</strong> (guest/guest) — observe as mensagens na fila <code>pedidos.queue</code> sendo consumidas.<br>
+        <strong>Painel de pedidos:</strong> <strong>http://localhost:3000</strong>
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="goStep(1,2)">← anterior</button>
+        <button class="nav-btn primary" onclick="goStep(1,4)">próximo →</button>
+      </div>
+    </div>
+
+    <!-- Step 1-4: Checklist -->
+    <div class="step-panel">
+      <span class="mod-badge mb-1">Módulo 1 — Docker Compose</span>
+      <h2 class="panel-title">Checklist e debug</h2>
+
+      <div class="verify">
+        <div class="verify-title">✓ Checklist Compose</div>
+        <ul>
+          <li><code>POST /order</code> retorna <code>{order_id, status: "queued"}</code></li>
+          <li>Worker imprime "ACK: pedido XXXX processado"</li>
+          <li>Painel :3000 lista pedidos com status "processado"</li>
+          <li>RabbitMQ :15672 — fila <code>pedidos.queue</code> com 0 mensagens pendentes</li>
+          <li>Postgres: <code>SELECT * FROM pedidos;</code> mostra registros</li>
+          <li>Teste NACK: enviar pedido com <code>qty: -1</code> e verificar rejeição</li>
+        </ul>
+      </div>
+
+      <div class="slabel">Debug RabbitMQ via CLI</div>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-label">debug</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        <div class="cmd-body"><span class="c"># Listar filas</span>
+docker compose exec rabbitmq rabbitmqctl list_queues name messages consumers
+
+<span class="c"># Ver pedidos no banco</span>
+docker compose exec db psql -U postgres -d pedidosdb \
+  -c "SELECT id, cliente, total, status FROM pedidos;"
+
+<span class="c"># Logs do worker</span>
+docker compose logs -f worker</div>
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="goStep(1,3)">← anterior</button>
+        <button class="nav-btn primary" onclick="goMod(2)">ir para Kubernetes →</button>
+      </div>
+    </div>
+  </div><!-- /mod1 -->
+
+
+  <!-- MÓDULO 2 -->
+  <div id="mod2" class="mod-panel">
+    <div id="nav-m2" class="steps-nav">
+      <button class="step-btn active" onclick="goStep(2,0)"><span class="snum">1</span>Cluster</button>
+      <button class="step-btn" onclick="goStep(2,1)"><span class="snum">2</span>DB</button>
+      <button class="step-btn" onclick="goStep(2,2)"><span class="snum">3</span>RabbitMQ</button>
+      <button class="step-btn" onclick="goStep(2,3)"><span class="snum">4</span>Loja</button>
+      <button class="step-btn" onclick="goStep(2,4)"><span class="snum">5</span>Worker</button>
+      <button class="step-btn" onclick="goStep(2,5)"><span class="snum">6</span>Verificação</button>
+    </div>
+
+    <div class="step-panel active">
+      <span class="mod-badge mb-2">Módulo 2 — Kubernetes / k3d</span>
+      <h2 class="panel-title">Criar o cluster k3d</h2>
+
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-label">criar cluster</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        <div class="cmd-body">k3d cluster create processador-pedidos \
+  --servers 1 --agents 2 \
+  --port "5000:30000@loadbalancer" \
+  --port "3000:30001@loadbalancer"
+
+docker build -t pedidos-loja:v1 ./loja
+docker build -t pedidos-worker:v1 ./worker
+docker build -t pedidos-painel:v1 ./painel
+k3d image import pedidos-loja:v1 pedidos-worker:v1 pedidos-painel:v1 \
+  -c processador-pedidos
+kubectl create namespace processador-pedidos</div>
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="goMod(1)">← anterior</button>
+        <button class="nav-btn primary" onclick="goStep(2,1)">próximo →</button>
+      </div>
+    </div>
+
+    <div class="step-panel">
+      <span class="mod-badge mb-2">Módulo 2 — Kubernetes / k3d</span>
+      <h2 class="panel-title">Banco de dados — Secret + PVC + Deployment + Service</h2>
+
+      <div class="yaml-block">
+        <div class="yaml-header">
+          <span class="yaml-filename">k8s/db-secret.yaml</span>
+          <div class="yaml-badges"><span class="yb yb-secret">Secret</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        </div>
+        <div class="yaml-body"><span class="k">apiVersion:</span> <span class="v">v1</span>
+<span class="k">kind:</span> <span class="v">Secret</span>
+<span class="k">metadata:</span>
+  <span class="k">name:</span> <span class="v">db-secret</span>
+  <span class="k">namespace:</span> <span class="v">processador-pedidos</span>
+<span class="k">stringData:</span>
+  <span class="k">POSTGRES_DB:</span> <span class="v">pedidosdb</span>
+  <span class="k">POSTGRES_USER:</span> <span class="v">postgres</span>
+  <span class="k">POSTGRES_PASSWORD:</span> <span class="v">postgres</span>
+  <span class="k">RABBIT_USER:</span> <span class="v">guest</span>
+  <span class="k">RABBIT_PASS:</span> <span class="v">guest</span></div>
+      </div>
+
+      <div class="yaml-block">
+        <div class="yaml-header">
+          <span class="yaml-filename">k8s/db-deployment.yaml (PVC + Deployment + Service)</span>
+          <div class="yaml-badges"><span class="yb yb-pvc">PVC</span><span class="yb yb-deploy">Deployment</span><span class="yb yb-svc">Service</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        </div>
+        <div class="yaml-body"><span class="k">apiVersion:</span> <span class="v">v1</span>
+<span class="k">kind:</span> <span class="v">PersistentVolumeClaim</span>
+<span class="k">metadata:</span>
+  <span class="k">name:</span> <span class="v">db-pvc</span>
+  <span class="k">namespace:</span> <span class="v">processador-pedidos</span>
+<span class="k">spec:</span>
+  <span class="k">accessModes:</span> <span class="v">["ReadWriteOnce"]</span>
+  <span class="k">resources:</span>
+    <span class="k">requests:</span>
+      <span class="k">storage:</span> <span class="v">1Gi</span>
+<span class="c">---</span>
+<span class="k">apiVersion:</span> <span class="v">apps/v1</span>
+<span class="k">kind:</span> <span class="v">Deployment</span>
+<span class="k">metadata:</span>
+  <span class="k">name:</span> <span class="v">db</span>
+  <span class="k">namespace:</span> <span class="v">processador-pedidos</span>
+<span class="k">spec:</span>
+  <span class="k">replicas:</span> <span class="v">1</span>
+  <span class="k">selector:</span>
+    <span class="k">matchLabels:</span>
+      <span class="k">app:</span> <span class="v">db</span>
+  <span class="k">template:</span>
+    <span class="k">metadata:</span>
+      <span class="k">labels:</span>
+        <span class="k">app:</span> <span class="v">db</span>
+    <span class="k">spec:</span>
+      <span class="k">containers:</span>
+      <span class="s">- name: postgres</span>
+        <span class="k">image:</span> <span class="v">postgres:15-alpine</span>
+        <span class="k">envFrom:</span>
+        <span class="s">- secretRef:</span>
+            <span class="k">name:</span> <span class="v">db-secret</span>
+        <span class="k">volumeMounts:</span>
+        <span class="s">- name: storage</span>
+          <span class="k">mountPath:</span> <span class="v">/var/lib/postgresql/data</span>
+        <span class="k">readinessProbe:</span>
+          <span class="k">exec:</span>
+            <span class="k">command:</span> <span class="v">["pg_isready","-U","postgres"]</span>
+          <span class="k">initialDelaySeconds:</span> <span class="v">5</span>
+          <span class="k">periodSeconds:</span> <span class="v">5</span>
+      <span class="k">volumes:</span>
+      <span class="s">- name: storage</span>
+        <span class="k">persistentVolumeClaim:</span>
+          <span class="k">claimName:</span> <span class="v">db-pvc</span>
+<span class="c">---</span>
+<span class="k">apiVersion:</span> <span class="v">v1</span>
+<span class="k">kind:</span> <span class="v">Service</span>
+<span class="k">metadata:</span>
+  <span class="k">name:</span> <span class="v">db</span>
+  <span class="k">namespace:</span> <span class="v">processador-pedidos</span>
+<span class="k">spec:</span>
+  <span class="k">selector:</span>
+    <span class="k">app:</span> <span class="v">db</span>
+  <span class="k">ports:</span>
+  <span class="s">- port: 5432</span></div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-label">aplicar</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        <div class="cmd-body">kubectl apply -f k8s/db-secret.yaml -f k8s/db-deployment.yaml
+kubectl wait --for=condition=ready pod -l app=db -n processador-pedidos --timeout=90s</div>
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="goStep(2,0)">← anterior</button>
+        <button class="nav-btn primary" onclick="goStep(2,2)">próximo →</button>
+      </div>
+    </div>
+
+    <!-- Step 2-2: RabbitMQ -->
+    <div class="step-panel">
+      <span class="mod-badge mb-2">Módulo 2 — Kubernetes / k3d</span>
+      <h2 class="panel-title">RabbitMQ — Deployment + ClusterIP</h2>
+      <p class="panel-sub">RabbitMQ usa ClusterIP (sem NodePort) — apenas serviços internos se comunicam com ele. Porta 5672 para AMQP, porta 15672 para management (opcional).</p>
+
+      <div class="yaml-block">
+        <div class="yaml-header">
+          <span class="yaml-filename">k8s/rabbitmq-deployment.yaml</span>
+          <div class="yaml-badges"><span class="yb yb-deploy">Deployment</span><span class="yb yb-svc">ClusterIP</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        </div>
+        <div class="yaml-body"><span class="k">apiVersion:</span> <span class="v">apps/v1</span>
+<span class="k">kind:</span> <span class="v">Deployment</span>
+<span class="k">metadata:</span>
+  <span class="k">name:</span> <span class="v">rabbitmq</span>
+  <span class="k">namespace:</span> <span class="v">processador-pedidos</span>
+<span class="k">spec:</span>
+  <span class="k">replicas:</span> <span class="v">1</span>
+  <span class="k">selector:</span>
+    <span class="k">matchLabels:</span>
+      <span class="k">app:</span> <span class="v">rabbitmq</span>
+  <span class="k">template:</span>
+    <span class="k">metadata:</span>
+      <span class="k">labels:</span>
+        <span class="k">app:</span> <span class="v">rabbitmq</span>
+    <span class="k">spec:</span>
+      <span class="k">containers:</span>
+      <span class="s">- name: rabbitmq</span>
+        <span class="k">image:</span> <span class="v">rabbitmq:3-management</span>
+        <span class="k">ports:</span>
+        <span class="s">- containerPort: 5672</span>   <span class="c"># AMQP</span>
+        <span class="s">- containerPort: 15672</span>  <span class="c"># Management</span>
+        <span class="k">readinessProbe:</span>
+          <span class="k">exec:</span>
+            <span class="k">command:</span> <span class="v">["rabbitmq-diagnostics","ping"]</span>
+          <span class="k">initialDelaySeconds:</span> <span class="v">20</span>
+          <span class="k">periodSeconds:</span> <span class="v">10</span>
+          <span class="k">failureThreshold:</span> <span class="v">6</span>
+<span class="c">---</span>
+<span class="k">apiVersion:</span> <span class="v">v1</span>
+<span class="k">kind:</span> <span class="v">Service</span>
+<span class="k">metadata:</span>
+  <span class="k">name:</span> <span class="v">rabbitmq</span>
+  <span class="k">namespace:</span> <span class="v">processador-pedidos</span>
+<span class="k">spec:</span>
+  <span class="k">selector:</span>
+    <span class="k">app:</span> <span class="v">rabbitmq</span>
+  <span class="k">ports:</span>
+  <span class="s">- name: amqp</span>
+    <span class="k">port:</span> <span class="v">5672</span>
+  <span class="s">- name: management</span>
+    <span class="k">port:</span> <span class="v">15672</span></div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-label">aplicar e aguardar</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        <div class="cmd-body">kubectl apply -f k8s/rabbitmq-deployment.yaml
+kubectl wait --for=condition=ready pod -l app=rabbitmq \
+  -n processador-pedidos --timeout=120s</div>
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="goStep(2,1)">← anterior</button>
+        <button class="nav-btn primary" onclick="goStep(2,3)">próximo →</button>
+      </div>
+    </div>
+
+    <!-- Step 2-3: Loja NodePort -->
+    <div class="step-panel">
+      <span class="mod-badge mb-2">Módulo 2 — Kubernetes / k3d</span>
+      <h2 class="panel-title">Loja (entrada) + Painel — Deployments + NodePort</h2>
+
+      <div class="yaml-block">
+        <div class="yaml-header">
+          <span class="yaml-filename">k8s/loja-deployment.yaml</span>
+          <div class="yaml-badges"><span class="yb yb-deploy">Deployment</span><span class="yb yb-svc">NodePort 30000</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        </div>
+        <div class="yaml-body"><span class="k">apiVersion:</span> <span class="v">apps/v1</span>
+<span class="k">kind:</span> <span class="v">Deployment</span>
+<span class="k">metadata:</span>
+  <span class="k">name:</span> <span class="v">loja</span>
+  <span class="k">namespace:</span> <span class="v">processador-pedidos</span>
+<span class="k">spec:</span>
+  <span class="k">replicas:</span> <span class="v">2</span>
+  <span class="k">selector:</span>
+    <span class="k">matchLabels:</span>
+      <span class="k">app:</span> <span class="v">loja</span>
+  <span class="k">template:</span>
+    <span class="k">metadata:</span>
+      <span class="k">labels:</span>
+        <span class="k">app:</span> <span class="v">loja</span>
+    <span class="k">spec:</span>
+      <span class="k">containers:</span>
+      <span class="s">- name: loja</span>
+        <span class="k">image:</span> <span class="v">pedidos-loja:v1</span>
+        <span class="k">imagePullPolicy:</span> <span class="v">Never</span>
+        <span class="k">envFrom:</span>
+        <span class="s">- secretRef:</span>
+            <span class="k">name:</span> <span class="v">db-secret</span>
+        <span class="k">env:</span>
+        <span class="s">- name: RABBIT_HOST</span>
+          <span class="k">value:</span> <span class="v">rabbitmq</span>
+        <span class="s">- name: DB_HOST</span>
+          <span class="k">value:</span> <span class="v">db</span>
+        <span class="k">readinessProbe:</span>
+          <span class="k">httpGet:</span>
+            <span class="k">path:</span> <span class="v">/health</span>
+            <span class="k">port:</span> <span class="v">5000</span>
+          <span class="k">initialDelaySeconds:</span> <span class="v">10</span>
+          <span class="k">periodSeconds:</span> <span class="v">5</span>
+        <span class="k">livenessProbe:</span>  <span class="c"># reinicia se travar</span>
+          <span class="k">httpGet:</span>
+            <span class="k">path:</span> <span class="v">/health</span>
+            <span class="k">port:</span> <span class="v">5000</span>
+          <span class="k">initialDelaySeconds:</span> <span class="v">30</span>
+          <span class="k">periodSeconds:</span> <span class="v">10</span>
+<span class="c">---</span>
+<span class="k">apiVersion:</span> <span class="v">v1</span>
+<span class="k">kind:</span> <span class="v">Service</span>
+<span class="k">metadata:</span>
+  <span class="k">name:</span> <span class="v">loja</span>
+  <span class="k">namespace:</span> <span class="v">processador-pedidos</span>
+<span class="k">spec:</span>
+  <span class="k">type:</span> <span class="v">NodePort</span>
+  <span class="k">selector:</span>
+    <span class="k">app:</span> <span class="v">loja</span>
+  <span class="k">ports:</span>
+  <span class="s">- port: 5000</span>
+    <span class="k">targetPort:</span> <span class="v">5000</span>
+    <span class="k">nodePort:</span> <span class="v">30000</span></div>
+      </div>
+
+      <div class="yaml-block">
+        <div class="yaml-header">
+          <span class="yaml-filename">k8s/painel-deployment.yaml</span>
+          <div class="yaml-badges"><span class="yb yb-deploy">Deployment</span><span class="yb yb-svc">NodePort 30001</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        </div>
+        <div class="yaml-body"><span class="k">apiVersion:</span> <span class="v">apps/v1</span>
+<span class="k">kind:</span> <span class="v">Deployment</span>
+<span class="k">metadata:</span>
+  <span class="k">name:</span> <span class="v">painel</span>
+  <span class="k">namespace:</span> <span class="v">processador-pedidos</span>
+<span class="k">spec:</span>
+  <span class="k">replicas:</span> <span class="v">1</span>
+  <span class="k">selector:</span>
+    <span class="k">matchLabels:</span>
+      <span class="k">app:</span> <span class="v">painel</span>
+  <span class="k">template:</span>
+    <span class="k">metadata:</span>
+      <span class="k">labels:</span>
+        <span class="k">app:</span> <span class="v">painel</span>
+    <span class="k">spec:</span>
+      <span class="k">containers:</span>
+      <span class="s">- name: painel</span>
+        <span class="k">image:</span> <span class="v">pedidos-painel:v1</span>
+        <span class="k">imagePullPolicy:</span> <span class="v">Never</span>
+        <span class="k">envFrom:</span>
+        <span class="s">- secretRef:</span>
+            <span class="k">name:</span> <span class="v">db-secret</span>
+        <span class="k">env:</span>
+        <span class="s">- name: DB_HOST</span>
+          <span class="k">value:</span> <span class="v">db</span>
+<span class="c">---</span>
+<span class="k">apiVersion:</span> <span class="v">v1</span>
+<span class="k">kind:</span> <span class="v">Service</span>
+<span class="k">metadata:</span>
+  <span class="k">name:</span> <span class="v">painel</span>
+  <span class="k">namespace:</span> <span class="v">processador-pedidos</span>
+<span class="k">spec:</span>
+  <span class="k">type:</span> <span class="v">NodePort</span>
+  <span class="k">selector:</span>
+    <span class="k">app:</span> <span class="v">painel</span>
+  <span class="k">ports:</span>
+  <span class="s">- port: 3000</span>
+    <span class="k">targetPort:</span> <span class="v">3000</span>
+    <span class="k">nodePort:</span> <span class="v">30001</span></div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-label">aplicar</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        <div class="cmd-body">kubectl apply -f k8s/loja-deployment.yaml
+kubectl apply -f k8s/painel-deployment.yaml</div>
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="goStep(2,2)">← anterior</button>
+        <button class="nav-btn primary" onclick="goStep(2,4)">próximo →</button>
+      </div>
+    </div>
+
+    <!-- Step 2-4: Worker com livenessProbe -->
+    <div class="step-panel">
+      <span class="mod-badge mb-2">Módulo 2 — Kubernetes / k3d</span>
+      <h2 class="panel-title">Worker — Deployment sem Service + livenessProbe</h2>
+      <p class="panel-sub">O worker não expõe porta. Adicionamos <code>livenessProbe</code> via exec: se o processo pika travar, o Kubernetes reinicia o pod automaticamente — destaque do App 03.</p>
+
+      <div class="yaml-block">
+        <div class="yaml-header">
+          <span class="yaml-filename">k8s/worker-deployment.yaml</span>
+          <div class="yaml-badges"><span class="yb yb-deploy">Deployment + livenessProbe</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        </div>
+        <div class="yaml-body"><span class="k">apiVersion:</span> <span class="v">apps/v1</span>
+<span class="k">kind:</span> <span class="v">Deployment</span>
+<span class="k">metadata:</span>
+  <span class="k">name:</span> <span class="v">worker</span>
+  <span class="k">namespace:</span> <span class="v">processador-pedidos</span>
+<span class="k">spec:</span>
+  <span class="k">replicas:</span> <span class="v">1</span>
+  <span class="k">selector:</span>
+    <span class="k">matchLabels:</span>
+      <span class="k">app:</span> <span class="v">worker</span>
+  <span class="k">template:</span>
+    <span class="k">metadata:</span>
+      <span class="k">labels:</span>
+        <span class="k">app:</span> <span class="v">worker</span>
+    <span class="k">spec:</span>
+      <span class="k">containers:</span>
+      <span class="s">- name: worker</span>
+        <span class="k">image:</span> <span class="v">pedidos-worker:v1</span>
+        <span class="k">imagePullPolicy:</span> <span class="v">Never</span>
+        <span class="c"># sem ports — worker não recebe conexões</span>
+        <span class="k">envFrom:</span>
+        <span class="s">- secretRef:</span>
+            <span class="k">name:</span> <span class="v">db-secret</span>
+        <span class="k">env:</span>
+        <span class="s">- name: RABBIT_HOST</span>
+          <span class="k">value:</span> <span class="v">rabbitmq</span>
+        <span class="s">- name: DB_HOST</span>
+          <span class="k">value:</span> <span class="v">db</span>
+        <span class="k">livenessProbe:</span>  <span class="c"># reinicia se o processo travar</span>
+          <span class="k">exec:</span>
+            <span class="k">command:</span> <span class="v">["python","-c","import pika; print('ok')"]</span>
+          <span class="k">initialDelaySeconds:</span> <span class="v">30</span>
+          <span class="k">periodSeconds:</span> <span class="v">30</span>
+          <span class="k">failureThreshold:</span> <span class="v">3</span></div>
+      </div>
+
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-label">aplicar</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        <div class="cmd-body">kubectl apply -f k8s/worker-deployment.yaml</div>
+      </div>
+
+      <div class="concept amber">
+        <strong>livenessProbe vs readinessProbe:</strong><br>
+        <strong>readinessProbe</strong> — controla se o pod recebe tráfego (usado na loja Flask).<br>
+        <strong>livenessProbe</strong> — controla se o pod está "vivo"; se falhar N vezes, o pod é reiniciado. Ideal para workers que podem travar no meio de uma conexão pika.
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="goStep(2,3)">← anterior</button>
+        <button class="nav-btn primary" onclick="goStep(2,5)">próximo →</button>
+      </div>
+    </div>
+
+    <!-- Step 2-5: Verificação -->
+    <div class="step-panel">
+      <span class="mod-badge mb-2">Módulo 2 — Kubernetes / k3d</span>
+      <h2 class="panel-title">Verificação final</h2>
+
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-label">verificar e testar</span><button class="copy-btn" onclick="cp(this)">copiar</button></div>
+        <div class="cmd-body">kubectl get all -n processador-pedidos
+
+<span class="c"># Criar pedido no cluster</span>
+curl -s -X POST http://localhost:5000/order \
+  -H "Content-Type: application/json" \
+  -d '{"cliente":"Teste K8s","itens":[{"produto":"Cadeira","qty":1,"preco":890.00}]}'
+
+<span class="c"># Acompanhar worker</span>
+kubectl logs -l app=worker -n processador-pedidos --tail=10 -f</div>
+      </div>
+
+      <div class="verify">
+        <div class="verify-title">✓ Checklist Kubernetes</div>
+        <ul>
+          <li>5 pods Running: db, rabbitmq, loja×2, worker, painel</li>
+          <li>Loja responde em <strong>localhost:5000</strong></li>
+          <li>Painel em <strong>localhost:3000</strong> exibe pedidos processados</li>
+          <li>Worker tem livenessProbe configurado — sem Service</li>
+          <li>Secret contém credenciais RabbitMQ e Postgres separados do código</li>
+          <li>Escalando worker: <code>kubectl scale deployment worker --replicas=2 -n processador-pedidos</code></li>
+        </ul>
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="goStep(2,4)">← anterior</button>
+        <button class="nav-btn primary" onclick="goMod(3)">ir para Questões →</button>
+      </div>
+    </div>
+  </div><!-- /mod2 -->
+
+
+  <!-- MÓDULO 3 -->
+  <div id="mod3" class="mod-panel">
+    <div id="nav-m3" class="steps-nav">
+      <button class="step-btn active" onclick="goStep(3,0)"><span class="snum">1</span>Questões</button>
+    </div>
+
+    <div class="step-panel active">
+      <span class="mod-badge mb-3">Módulo 3 — Questões</span>
+      <h2 class="panel-title">Questões de avaliação</h2>
+      <p class="panel-sub">3 questões conceituais sobre RabbitMQ, ACK e K8s + 2 práticas de modificação de código.</p>
+
+      <ul class="q-list">
+        <li class="q-item">
+          <div class="q-num">Questão 1</div>
+          <span class="q-type qt-conceitual">conceitual</span>
+          <div class="q-text">Qual a diferença entre Redis List e RabbitMQ para filas de mensagens? Em quais situações você escolheria um ou outro?</div>
+          <div class="q-hint">💡 Redis List: simples, rápido, sem ACK nativo — se o worker crashar após BLPOP, a mensagem se perde. RabbitMQ: ACK/NACK explícito, mensagens ficam "unacked" até confirmação, reentrega automática em caso de falha, roteamento flexível via exchange. Use Redis para filas simples onde perda eventual é tolerável; RabbitMQ para operações críticas (pagamentos, pedidos).</div>
+        </li>
+        <li class="q-item">
+          <div class="q-num">Questão 2</div>
+          <span class="q-type qt-conceitual">conceitual</span>
+          <div class="q-text">O que é ACK em mensageria e por que ele é importante? O que acontece se o worker enviar ACK antes de fazer o INSERT no Postgres?</div>
+          <div class="q-hint">💡 ACK (acknowledgement) é a confirmação de que a mensagem foi processada com sucesso. Após ACK, o broker remove a mensagem. Se enviar ACK antes do INSERT e o banco falhar, a mensagem é perdida para sempre. Por isso o padrão correto é: processa completamente → só então ACK. Isso garante "at-least-once delivery".</div>
+        </li>
+        <li class="q-item">
+          <div class="q-num">Questão 3</div>
+          <span class="q-type qt-conceitual">conceitual</span>
+          <div class="q-text">O que acontece com um pedido se o worker crashar no meio do processamento — após receber a mensagem do RabbitMQ mas antes de enviar ACK?</div>
+          <div class="q-hint">💡 A mensagem fica no estado "unacked" no RabbitMQ. Quando a conexão TCP do worker cai (crash), o RabbitMQ detecta o fechamento da conexão e recoloca a mensagem na fila automaticamente (requeue). Um novo worker (ou o pod reiniciado) receberá a mensagem novamente. Isso pode causar processamento duplicado — daí a importância de idempotência no INSERT (upsert em vez de insert puro).</div>
+        </li>
+        <li class="q-item">
+          <div class="q-num">Questão 4</div>
+          <span class="q-type qt-pratica">prática</span>
+          <div class="q-text">Adicione o status <code>"cancelado"</code>: implemente o endpoint <code>POST /order/&lt;id&gt;/cancel</code> na loja Flask que publica uma mensagem de cancelamento em uma fila <code>cancelamentos.queue</code> no RabbitMQ.</div>
+          <div class="q-hint">💡 Crie uma exchange <code>cancelamentos</code> (direct) e uma fila <code>cancelamentos.queue</code>. O endpoint deve publicar <code>{"order_id": id, "motivo": "cliente solicitou"}</code>. Crie um segundo consumer no worker que também processa <code>cancelamentos.queue</code> e atualiza o status do pedido no Postgres para "cancelado".</div>
+        </li>
+        <li class="q-item">
+          <div class="q-num">Questão 5</div>
+          <span class="q-type qt-pratica">prática</span>
+          <div class="q-text">Adicione uma Dead Letter Queue (DLQ) para pedidos com erro de validação: em vez de descartar mensagens inválidas com NACK (requeue=False), envie-as para uma fila <code>pedidos.dlq</code>.</div>
+          <div class="q-hint">💡 Configure a fila principal com o argumento <code>x-dead-letter-exchange</code> apontando para uma exchange <code>dlx</code>. Quando o worker envia NACK com requeue=False, o RabbitMQ automaticamente encaminha para a DLX → DLQ. Adicione um endpoint <code>GET /dlq</code> no painel que lista mensagens na dead letter queue para auditoria.</div>
+        </li>
+      </ul>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="goMod(2)">← anterior</button>
+        <button class="nav-btn" disabled>fim do guia</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let curMod = 0;
+const modSteps = [2, 5, 6, 1];
+const curStepOf = [0, 0, 0, 0];
+function goMod(m) {
+  document.getElementById('mod'+curMod).classList.remove('active');
+  document.querySelectorAll('.mod-btn')[curMod].classList.remove('active');
+  curMod = m;
+  document.getElementById('mod'+curMod).classList.add('active');
+  document.querySelectorAll('.mod-btn')[curMod].classList.add('active');
+  goStep(m, 0);
+}
+function goStep(m, s) {
+  const panels = document.querySelectorAll('#mod'+m+' .step-panel');
+  const btns = document.querySelectorAll('#nav-m'+m+' .step-btn');
+  if (btns[curStepOf[m]]) btns[curStepOf[m]].classList.remove('active');
+  if (s > curStepOf[m] && btns[curStepOf[m]]) btns[curStepOf[m]].classList.add('done');
+  if (panels[curStepOf[m]]) panels[curStepOf[m]].classList.remove('active');
+  curStepOf[m] = s;
+  if (panels[s]) panels[s].classList.add('active');
+  if (btns[s]) { btns[s].classList.remove('done'); btns[s].classList.add('active'); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function cp(btn) {
+  const block = btn.closest('.cmd-block, .yaml-block');
+  const body = block.querySelector('.cmd-body, .yaml-body');
+  const text = body.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copiado!'; setTimeout(() => btn.textContent = 'copiar', 1500);
+  }).catch(() => {
+    const ta = document.createElement('textarea'); ta.value = text;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    btn.textContent = 'copiado!'; setTimeout(() => btn.textContent = 'copiar', 1500);
+  });
+}
+</script>
+</body>
+</html>

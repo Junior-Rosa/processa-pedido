@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: processador-pedidos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+      - name: worker
+        image: pedidos-app:v1
+        imagePullPolicy: Never
+        command: ["python", "manage.py", "run_worker"]
+        envFrom:
+        - secretRef:
+            name: db-secret
+        env:
+        - name: RABBIT_HOST
+          value: rabbitmq
+        - name: DB_HOST
+          value: db
+        ports:
+        - containerPort: 9100
+          name: metrics
+        livenessProbe:
+          exec:
+            command: ["python", "-c", "import pika; print('ok')"]
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          failureThreshold: 3

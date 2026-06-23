@@ -1,0 +1,23 @@
+services:
+  loja:
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py runserver 0.0.0.0:5000"
+    volumes:
+      - .:/app
+      - /app/.venv
+    environment:
+      DJANGO_DEBUG: "True"
+
+  painel:
+    command: python manage.py runserver 0.0.0.0:3000
+    volumes:
+      - .:/app
+      - /app/.venv
+    environment:
+      DJANGO_DEBUG: "True"
+
+  worker:
+    volumes:
+      - .:/app
+      - /app/.venv
