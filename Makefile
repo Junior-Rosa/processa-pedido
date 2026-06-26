@@ -67,6 +67,9 @@ health:
 # build+import da imagem e aplicação declarativa de todos os manifests em k8s/.
 infra-up:
 	terraform -chdir=terraform init
+	# 1ª apply cria cluster k3d + imagem (gera o contexto kubeconfig "k3d-$(CLUSTER)")
+	# 2ª apply aplica os manifests — precisa do contexto já existente p/ o provider kubectl
+	terraform -chdir=terraform apply -auto-approve -target=null_resource.k3d_cluster -target=null_resource.app_image
 	terraform -chdir=terraform apply -auto-approve
 
 infra-down:

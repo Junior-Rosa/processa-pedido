@@ -3,7 +3,7 @@ output "loja_url" {
 }
 
 output "painel_url" {
-  value = "http://localhost:3000"
+  value = "http://localhost:3002"
 }
 
 output "rabbitmq_management_url" {

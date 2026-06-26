@@ -133,7 +133,7 @@ Terraform é responsável por criar/destruir o cluster k3d, buildar+importar a i
 
 ```bash
 # Cluster + imagem + todos os manifests (db, rabbitmq, redis, loja, painel, worker, prometheus, grafana)
-make infra-up      # == terraform -chdir=terraform init && apply
+make infra-up      # == terraform -chdir=terraform init && apply (cluster/imagem) && apply (manifests)
 
 # Aguardar pods ficarem Running
 make k8s-status
@@ -146,7 +146,8 @@ make k8s-logs-worker
 # Acessar RabbitMQ
 make k8s-rabbitmq   # port-forward → http://localhost:15672
 
-# Acessar Prometheus / Grafana
+# Acessar painel / Prometheus / Grafana
+open http://localhost:3002   # Painel (porta 3000 mapeada em 3002 no host p/ evitar conflito)
 open http://localhost:9090   # Prometheus
 open http://localhost:3001   # Grafana (dashboard "Processador de Pedidos" pré-provisionado)
 

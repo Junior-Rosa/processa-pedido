@@ -12,7 +12,7 @@ resource "null_resource" "k3d_cluster" {
         k3d cluster create ${var.cluster_name} \
           --servers 1 --agents 2 \
           --port "5000:30000@loadbalancer" \
-          --port "3000:30001@loadbalancer" \
+          --port "3002:30001@loadbalancer" \
           --port "15672:30002@loadbalancer" \
           --port "9090:30003@loadbalancer" \
           --port "3001:30004@loadbalancer"
